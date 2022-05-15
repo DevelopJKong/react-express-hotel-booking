@@ -1,0 +1,15 @@
+.listMode {
+  margin: 20px 0px 0px 0px;
+}
+
+.active {
+  border: 1px solid white;
+  padding: 10px;
+  border-radius: 20px;
+}
+
+.date {
+  position: absolute;
+  top: 50px;
+  z-index: 2;
+}
