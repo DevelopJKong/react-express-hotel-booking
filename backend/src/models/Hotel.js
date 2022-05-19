@@ -1,5 +1,4 @@
 import mongoose from "mongoose";
-const { Scheme } = mongoose;
 
 const HotelsSchema = new mongoose.Schema({
   name: {
