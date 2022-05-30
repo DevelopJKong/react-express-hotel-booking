@@ -2,6 +2,7 @@ import "dotenv/config";
 import express from "express";
 import "./db.js";
 import morgan from "morgan";
+import cookieParser from "cookie-parser";
 import authRouter from "./routes/authRouter.js";
 import hotelsRouter from "./routes/hotelsRouter.js";
 import roomsRouter from "./routes/roomsRouter.js";
@@ -12,7 +13,10 @@ const PORT = 5000;
 const logger = morgan("dev");
 //middleware
 app.use(express.json());
+app.use(cookieParser());
 app.use(logger);
+
+
 app.use("/api/auth", authRouter);
 app.use("/api/rooms", roomsRouter);
 app.use("/api/hotels", hotelsRouter);

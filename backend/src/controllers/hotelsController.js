@@ -55,11 +55,10 @@ export const getHotel = async (req, res,next) => {
 
 //Get All
 export const getAllHotel = async (req, res,next) => {
-  const { id } = req.params;
   try {
-    const hotel = await Hotel.find(id);
+    const hotel = await Hotel.find();
     res.status(200).json(hotel);
   } catch (error) {
     next(error);
-  }
+  } 
 };
