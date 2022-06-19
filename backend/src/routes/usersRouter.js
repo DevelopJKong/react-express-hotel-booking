@@ -1,16 +1,21 @@
 import express from "express";
-import { createUser } from "../controllers/usersController";
+import {
+  deleteUser,
+  getUser,
+  getUsers,
+  updateUser,
+} from "../controllers/usersController.js";
+import { verifyAdmin, verifyUser } from "../utils/verifyToken.js";
 
 const usersRouter = express.Router();
 
 //UPDATE
-usersRouter.put("/:id",updateUser);
+usersRouter.put("/:id", verifyUser, updateUser);
 //DELETE
-usersRouter.delete("/:id",deleteUser);
+usersRouter.delete("/:id", verifyUser, deleteUser);
 //GET
-usersRouter.get("/:id",getUser);
+usersRouter.get("/:id", verifyUser, getUser);
 //GET ALL
-usersRouter.get("/",getUsers);
-
+usersRouter.get("/", verifyAdmin, getUsers);
 
 export default usersRouter;

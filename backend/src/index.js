@@ -16,7 +16,6 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(logger);
 
-
 app.use("/api/auth", authRouter);
 app.use("/api/rooms", roomsRouter);
 app.use("/api/hotels", hotelsRouter);
