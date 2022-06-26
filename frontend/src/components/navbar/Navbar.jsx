@@ -1,10 +1,16 @@
 import styled from "styled-components";
+import { Link } from "react-router-dom";
 
 const Container = styled.div`
   height: 50px;
   background-color: #003580;
   display: flex;
   justify-content: center;
+
+  a {
+    text-decoration: none;
+    color:inherit;
+  }
 `;
 
 const Nav = styled.div`
@@ -34,7 +40,9 @@ const Navbar = () => {
   return (
     <Container>
       <Nav>
-        <Logo>Cafe Small House Booking</Logo>
+        <Link to="/">
+          <Logo>Cafe Small House Booking</Logo>
+        </Link>
         <NavItems>
           <Btn>Register</Btn>
           <Btn>Login</Btn>

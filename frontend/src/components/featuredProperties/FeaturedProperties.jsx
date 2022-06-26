@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import useFetch from "../../hooks/useFetch";
 
 const Container = styled.div`
   width: 100%;
@@ -17,7 +18,7 @@ const Item = styled.div`
 
 const Img = styled.img`
   width: 100%;
-  min-height:400px;
+  min-height: 400px;
 `;
 
 const Name = styled.span`
@@ -35,61 +36,42 @@ const Price = styled.span`
 const Rating = styled.div`
   button {
     background-color: #003580;
-    color:white;
-    border:none;
-    padding:3px;
+    color: white;
+    border: none;
+    padding: 3px;
     margin-right: 10px;
     font-weight: bold;
   }
   span {
-      font-size: 14px;
+    font-size: 14px;
   }
 `;
 
 const FeaturedProperties = () => {
+  const { data, loading, error } = useFetch("/hotels?featured=true&limit=4");
+
   return (
     <Container>
-      <Item>
-        <Img src="https://source.unsplash.com/random/20" />
-        <Name>Aparthotel Stare Miasto</Name>
-        <City>Madrid</City>
-        <Price>Starting from $120</Price>
-        <Rating>
-          <button>8.9</button>
-          <span>Excellent</span>
-        </Rating>
-      </Item>
-      <Item>
-        <Img src="https://source.unsplash.com/random/21" />
-        <Name>Aparthotel Stare Miasto</Name>
-        <City>Madrid</City>
-        <Price>Starting from $120</Price>
-        <Rating>
-          <button>8.9</button>
-          <span>Excellent</span>
-        </Rating>
-      </Item>
-      <Item>
-        <Img src="https://source.unsplash.com/random/22" />
-        <Name>Aparthotel Stare Miasto</Name>
-        <City>Madrid</City>
-        <Price>Starting from $120</Price>
-        <Rating>
-          <button>8.9</button>
-          <span>Excellent</span>
-        </Rating>
-      </Item>
-      <Item>
-        <Img src="https://source.unsplash.com/random/23" />
-        <Name>Aparthotel Stare Miasto</Name>
-        <City>Madrid</City>
-        <Price>Starting from $120</Price>
-        <Rating>
-          <button>8.9</button>
-          <span>Excellent</span>
-        </Rating>
-      </Item>
-
+      {loading ? (
+        "Loading..."
+      ) : (
+        <>
+          {data.map((item) => (
+            <Item>
+              <Img src={item.photos[0]} />
+              <Name>{item.name}</Name>
+              <City>{item.city}</City>
+              <Price>Starting from ${item.cheapestPrice}</Price>
+              {item.rating && (
+                <Rating>
+                  <button>{item.rating}</button>
+                  <span>Excellent</span>
+                </Rating>
+              )}
+            </Item>
+          ))}
+        </>
+      )}
     </Container>
   );
 };

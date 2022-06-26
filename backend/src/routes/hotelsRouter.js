@@ -1,6 +1,7 @@
 import express from "express";
 import {
   countByCity,
+  countByType,
   createHotel,
   deleteHotel,
   getAllHotel,
@@ -26,7 +27,7 @@ hotelsRouter.get("/:id([0-9a-f]{24})", getHotel);
 //GET ALL
 hotelsRouter.get("/", getAllHotel);
 hotelsRouter.get("/countByCity",countByCity);
-//hotelsRouter.get("/countByType");
+hotelsRouter.get("/countByType",countByType);
 
 
 
