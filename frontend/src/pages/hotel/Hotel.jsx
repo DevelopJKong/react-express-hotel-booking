@@ -13,6 +13,8 @@ import Footer from "../../components/footer/Footer";
 import Header from "../../components/header/Header";
 import MailList from "../../components/mailList/MailList";
 import Navbar from "../../components/navbar/Navbar";
+import Reserve from "../../components/reserve/Reserve";
+import { AuthContext } from "../../context/AuthContext";
 import { SearchContext } from "../../context/SearchContext";
 import useFetch from "../../hooks/useFetch";
 import "./hotel.css";
@@ -163,9 +165,11 @@ const Hotel = () => {
   const id = location.pathname.split("/")[2];
 
   const { data, loading, error } = useFetch(`/hotels/${id}`);
+  const { user } = useContext(AuthContext);
 
   const [slideNumber, setSlideNumber] = useState(0);
   const [open, setOpen] = useState(false);
+  const [openModal,setOpenModal] = useState(false);
 
   const handleMove = (direction) => {
     let newSliderNumber;
@@ -197,6 +201,16 @@ const Hotel = () => {
     document.body.style.overflow = "hidden";
     setOpen(true);
   };
+
+  const handleClick = () => {
+    if(user) {
+      setOpenModal(true);
+    } else {
+      navigate("/");
+    }
+
+  }
+
 
   return (
     <div>
@@ -236,7 +250,7 @@ const Hotel = () => {
           <>
             <Container>
               <Wrapper>
-                <BookBtn>Reserve or Book Now!</BookBtn>
+                <BookBtn onClick={handleClick} >Reserve or Book Now!</BookBtn>
                 <Title>Grand Hotel</Title>
                 <Address>
                   <FontAwesomeIcon icon={faLocationDot} />
@@ -283,6 +297,7 @@ const Hotel = () => {
           </>
         )}
       </>
+      {openModal && <Reserve setOpen={setOpenModal} />}
     </div>
   );
 };

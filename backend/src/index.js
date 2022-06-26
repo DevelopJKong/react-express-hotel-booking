@@ -7,6 +7,7 @@ import authRouter from "./routes/authRouter.js";
 import hotelsRouter from "./routes/hotelsRouter.js";
 import roomsRouter from "./routes/roomsRouter.js";
 import usersRouter from "./routes/usersRouter.js";
+import bodyParser from "body-parser";
 import cors from "cors";
 
 const app = express();
@@ -15,7 +16,9 @@ const logger = morgan("dev");
 //middleware
 app.use(cors());
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
+app.use(bodyParser.json());
 app.use(logger);
 
 app.use("/api/auth", authRouter);

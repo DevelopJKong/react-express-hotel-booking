@@ -1,5 +1,7 @@
 import styled from "styled-components";
 import { Link } from "react-router-dom";
+import { useContext } from "react";
+import { AuthContext } from "../../context/AuthContext";
 
 const Container = styled.div`
   height: 50px;
@@ -9,7 +11,7 @@ const Container = styled.div`
 
   a {
     text-decoration: none;
-    color:inherit;
+    color: inherit;
   }
 `;
 
@@ -37,16 +39,22 @@ const Btn = styled.button`
 `;
 
 const Navbar = () => {
+  const { user } = useContext(AuthContext);
+
   return (
     <Container>
       <Nav>
         <Link to="/">
           <Logo>Cafe Small House Booking</Logo>
         </Link>
-        <NavItems>
-          <Btn>Register</Btn>
-          <Btn>Login</Btn>
-        </NavItems>
+        {user ? (
+          user.username
+        ) : (
+          <NavItems>
+            <Btn>Register</Btn>
+            <Btn>Login</Btn>
+          </NavItems>
+        )}
       </Nav>
     </Container>
   );
