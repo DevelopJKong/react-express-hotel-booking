@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import styled from "styled-components";
 
 const Container = styled.div`
@@ -107,30 +108,36 @@ const CheckBtn = styled.button`
   border-radius: 5px;
 `;
 
-const SearchItem = () => {
+const SearchItem = ({ item }) => {
+  console.log(item);
+  console.log("hello");
   return (
     <Container>
-      <Img src="https://source.unsplash.com/random/1" alt="random" />
+      <Img src={item.photos[0]} alt="random" />
       <Desc>
-        <Title>Tower Street Apartments</Title>
-        <Distance>500m from center</Distance>
+        <Title>{item.name}</Title>
+        <Distance>{item.distance}m from center</Distance>
         <TaxiOp>Free airport taxi</TaxiOp>
         <Subtitle>Studio Apartment with Air conditioning</Subtitle>
-        <Features>Entire studio . 1 bathroom 21m 1 full bed</Features>
+        <Features>{item.desc}</Features>
         <CancelOp>Free cancellation</CancelOp>
         <CancelOpSubtitle>
           You can cancel later, so lock in this great price today!
         </CancelOpSubtitle>
       </Desc>
       <Detail>
-        <Rating>
-          <span>Excellent</span>
-          <button>8.9</button>
-        </Rating>
+        {item.rating && (
+          <Rating>
+            <span>Excellent</span>
+            <button>{item.rating}</button>
+          </Rating>
+        )}
         <DetailTexts>
-          <Price>$123</Price>
-          <TaxOp>$123</TaxOp>
-          <CheckBtn>See Available</CheckBtn>
+          <Price>${item.cheapestPrice}</Price>
+          <TaxOp>Includes taxes and fees</TaxOp>
+          <Link to={`/hotels/${item._id}`}>
+            <CheckBtn>See Available</CheckBtn>
+          </Link>
         </DetailTexts>
       </Detail>
     </Container>

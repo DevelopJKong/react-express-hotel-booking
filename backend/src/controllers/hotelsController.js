@@ -56,11 +56,13 @@ export const getHotel = async (req, res, next) => {
 //Get All
 export const getAllHotel = async (req, res, next) => {
   const { min, max, ...others } = req.query;
+  console.log(others);
   try {
     const hotels = await Hotel.find({
       ...others,
-      cheapestPrice: { $gt: min | 1, $lt: max || 999 },
+      cheapestPrice: { $gt: min || 1, $lt: max || 999 }, //여기서 왜 | 이렇게 비트 연산자를 사용해야하는거지?
     }).limit(req.query.limit);
+    console.log(hotels);
     res.status(200).json(hotels);
   } catch (error) {
     next(error);
