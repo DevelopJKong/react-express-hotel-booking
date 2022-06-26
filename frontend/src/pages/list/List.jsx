@@ -108,8 +108,6 @@ const List = () => {
     reFetch();
   }
 
-  console.log(data);
-  console.log(loading);
   return (
     <div>
       <Navbar />

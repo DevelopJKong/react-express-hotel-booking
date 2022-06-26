@@ -15,6 +15,8 @@ import "react-date-range/dist/styles.css"; // main css file
 import "react-date-range/dist/theme/default.css"; // theme css file
 import { format } from "date-fns";
 import styled from "styled-components";
+import { useContext } from "react";
+import { NEW_SEARCH, SearchContext } from "../../context/SearchContext";
 
 const Container = styled.div`
   background-color: #003580;
@@ -173,7 +175,10 @@ const Header = ({ type }) => {
     });
   };
 
+  const { dispatch } = useContext(SearchContext);
+
   const handleSearch = () => {
+    dispatch({ type: NEW_SEARCH, payload:{destination,date,options} });
     navigate("/hotels", { state: { destination, date, options } });
   };
 

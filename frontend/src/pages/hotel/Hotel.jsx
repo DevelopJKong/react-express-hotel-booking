@@ -5,12 +5,16 @@ import {
   faLocationDot,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useContext } from "react";
 import { useState } from "react";
+import { useLocation, useNavigate } from "react-router";
 import styled from "styled-components";
 import Footer from "../../components/footer/Footer";
 import Header from "../../components/header/Header";
 import MailList from "../../components/mailList/MailList";
 import Navbar from "../../components/navbar/Navbar";
+import { SearchContext } from "../../context/SearchContext";
+import useFetch from "../../hooks/useFetch";
 import "./hotel.css";
 const Container = styled.div`
   display: flex;
@@ -154,6 +158,12 @@ const HotelDesc = styled.p`
 `;
 
 const Hotel = () => {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const id = location.pathname.split("/")[2];
+
+  const { data, loading, error } = useFetch(`/hotels/${id}`);
+
   const [slideNumber, setSlideNumber] = useState(0);
   const [open, setOpen] = useState(false);
 
@@ -168,26 +178,19 @@ const Hotel = () => {
     setSlideNumber(newSliderNumber);
   };
 
-  const photo = [
-    {
-      src: "https://source.unsplash.com/random/1",
-    },
-    {
-      src: "https://source.unsplash.com/random/2",
-    },
-    {
-      src: "https://source.unsplash.com/random/3",
-    },
-    {
-      src: "https://source.unsplash.com/random/4",
-    },
-    {
-      src: "https://source.unsplash.com/random/5",
-    },
-    {
-      src: "https://source.unsplash.com/random/6",
-    },
-  ];
+  const { date, options } = useContext(SearchContext);
+
+  const MILLSECONDS_PER_DAY = 1000 * 60 * 60 * 24;
+  function dayDifference(date1, date2) {
+    const timeDiff = Math.abs(date2?.getTime() - date1?.getTime());
+    const diffDays = Math.ceil(timeDiff / MILLSECONDS_PER_DAY);
+    return diffDays;
+  }
+
+  const days = dayDifference(date[0]?.endDate, date[0]?.startDate);
+  if(!days) {
+    navigate("/");
+  }
 
   const handleOpen = (index) => {
     setSlideNumber(index);
@@ -199,85 +202,87 @@ const Hotel = () => {
     <div>
       <Navbar />
       <Header type="list" />
-      {open && (
-        <Slider>
-          <FontAwesomeIcon
-            icon={faCircleXmark}
-            className="close"
-            onClick={() => {
-              document.body.style.overflow = "unset";
-              setOpen(false);
-            }}
-          />
-          <SliderWrapper>
-            <FontAwesomeIcon
-              icon={faCircleArrowLeft}
-              className="arrow"
-              onClick={() => handleMove("left")}
-            />
-            <SliderImg src={photo[slideNumber].src} />
-            <FontAwesomeIcon
-              icon={faCircleArrowRight}
-              className="arrow"
-              onClick={() => handleMove("right")}
-            />
-          </SliderWrapper>
-        </Slider>
-      )}
-      <Container>
-        <Wrapper>
-          <BookBtn>Reserve or Book Now!</BookBtn>
-          <Title>Grand Hotel</Title>
-          <Address>
-            <FontAwesomeIcon icon={faLocationDot} />
-            <span>Elton St 125 New York</span>
-          </Address>
-          <Distance>Excellent location 500m from center</Distance>
-          <PriceHighlight>
-            Book a stay over $114 at this property and get a free airport taxi
-          </PriceHighlight>
-          <HotelImg>
-            {photo.map((photo, index) => {
-              return (
-                <ImgWrapper key={index}>
-                  <Img onClick={() => handleOpen(index)} src={photo.src} />
-                </ImgWrapper>
-              );
-            })}
-          </HotelImg>
-          <Details>
-            <DetailsTexts>
-              <HotelTitle>Stay in the heart of Krakow</HotelTitle>
-              <HotelDesc>
-                Located a 5-minute walk from St. Florian's Gate in Krakow, Tower
-                Street Apartments has accommodations with air conditioning and
-                free WiFi. The units come with hardwood floors and feature a
-                fully equipped kitchenette with a microwave, a flat-screen TV,
-                and a private bathroom with shower and a hairdryer. A fridge is
-                also offered, as well as an electric tea pot and a coffee
-                machine. Popular points of interest near the apartment include
-                Cloth Hall, Main Market Square and Town Hall Tower. The nearest
-                airport is John Paul II International Kraków–Balice, 16.1 km
-                from Tower Street Apartments, and the property offers a paid
-                airport shuttle service.
-              </HotelDesc>
-            </DetailsTexts>
-            <DetailsPrice>
-              <h3>Perfect for 9-night stay</h3>
-              <span>
-                Located in the real heart of Krakow, this property has an
-                excellent location score of 9.8
-              </span>
-              <h4>
-                <b>$945</b>
-              </h4>
-              <button>Reserve of Book Now!</button>
-            </DetailsPrice>
-          </Details>
-        </Wrapper>
-      </Container>
-      <MailList />
-      <Footer />
+      <>
+        {loading
+          ? "Loading..."
+          : open && (
+              <Slider>
+                <FontAwesomeIcon
+                  icon={faCircleXmark}
+                  className="close"
+                  onClick={() => {
+                    document.body.style.overflow = "unset";
+                    setOpen(false);
+                  }}
+                />
+                <SliderWrapper>
+                  <FontAwesomeIcon
+                    icon={faCircleArrowLeft}
+                    className="arrow"
+                    onClick={() => handleMove("left")}
+                  />
+                  <SliderImg src={data.photos[slideNumber]} />
+                  <FontAwesomeIcon
+                    icon={faCircleArrowRight}
+                    className="arrow"
+                    onClick={() => handleMove("right")}
+                  />
+                </SliderWrapper>
+              </Slider>
+            )}
+        {loading ? (
+          "Loading..."
+        ) : (
+          <>
+            <Container>
+              <Wrapper>
+                <BookBtn>Reserve or Book Now!</BookBtn>
+                <Title>Grand Hotel</Title>
+                <Address>
+                  <FontAwesomeIcon icon={faLocationDot} />
+                  <span>{data.address}</span>
+                </Address>
+                <Distance>
+                  Excellent location {data.distance}m from center
+                </Distance>
+                <PriceHighlight>
+                  Book a stay over ${data.cheapestPrice} at this property and
+                  get a free airport taxi
+                </PriceHighlight>
+                <HotelImg>
+                  {data.photos?.map((photo, index) => {
+                    return (
+                      <ImgWrapper key={index}>
+                        <Img onClick={() => handleOpen(index)} src={photo} />
+                      </ImgWrapper>
+                    );
+                  })}
+                </HotelImg>
+                <Details>
+                  <DetailsTexts>
+                    <HotelTitle>{data.title}</HotelTitle>
+                    <HotelDesc>{data.desc}</HotelDesc>
+                  </DetailsTexts>
+                  <DetailsPrice>
+                    <h3>Perfect for {days}-night stay</h3>
+                    <span>
+                      Located in the real heart of Krakow, this property has an
+                      excellent location score of 9.8
+                    </span>
+                    <h4>
+                      <b>${days * data.cheapestPrice * options.room}</b> ({days}
+                      nights)
+                    </h4>
+                    <button>Reserve of Book Now!</button>
+                  </DetailsPrice>
+                </Details>
+              </Wrapper>
+            </Container>
+            <MailList />
+            <Footer />
+          </>
+        )}
+      </>
     </div>
   );
 };
