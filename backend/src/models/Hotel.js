@@ -1,6 +1,5 @@
 import mongoose from "mongoose";
-
-const HotelsSchema = new mongoose.Schema({
+const HotelSchema = new mongoose.Schema({
   name: {
     type: String,
     required: true,
@@ -24,11 +23,11 @@ const HotelsSchema = new mongoose.Schema({
   photos: {
     type: [String],
   },
-  desc: {
+  title: {
     type: String,
     required: true,
   },
-  title: {
+  desc: {
     type: String,
     required: true,
   },
@@ -38,16 +37,16 @@ const HotelsSchema = new mongoose.Schema({
     max: 5,
   },
   rooms: {
-    type: { String },
+    type: [String],
   },
   cheapestPrice: {
     type: Number,
     required: true,
   },
   featured: {
-      type:String,
-      default:false
-  }
+    type: Boolean,
+    default: false,
+  },
 });
 
-export default mongoose.model("Hotel",HotelsSchema);
+export default mongoose.model("Hotel", HotelSchema);

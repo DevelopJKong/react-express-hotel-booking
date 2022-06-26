@@ -7,11 +7,13 @@ import authRouter from "./routes/authRouter.js";
 import hotelsRouter from "./routes/hotelsRouter.js";
 import roomsRouter from "./routes/roomsRouter.js";
 import usersRouter from "./routes/usersRouter.js";
+import cors from "cors";
 
 const app = express();
 const PORT = 5000;
 const logger = morgan("dev");
 //middleware
+app.use(cors());
 app.use(express.json());
 app.use(cookieParser());
 app.use(logger);

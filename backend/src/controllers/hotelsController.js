@@ -1,7 +1,7 @@
 import Hotel from "../models/Hotel.js";
 
 //Create
-export const createHotel = async (req, res,next) => {
+export const createHotel = async (req, res, next) => {
   const newHotel = new Hotel(req.body);
   try {
     const savedHotel = await newHotel.save();
@@ -12,7 +12,7 @@ export const createHotel = async (req, res,next) => {
 };
 
 //Update
-export const updateHotel = async (req, res,next) => {
+export const updateHotel = async (req, res, next) => {
   try {
     const updatedHotel = await Hotel.findByIdAndUpdate(
       req.params.id,
@@ -30,7 +30,7 @@ export const updateHotel = async (req, res,next) => {
 };
 
 //Delete
-export const deleteHotel = async (req, res,next) => {
+export const deleteHotel = async (req, res, next) => {
   const { id } = req.params;
 
   try {
@@ -43,7 +43,7 @@ export const deleteHotel = async (req, res,next) => {
 };
 
 //Get
-export const getHotel = async (req, res,next) => {
+export const getHotel = async (req, res, next) => {
   const { id } = req.params;
   try {
     const hotel = await Hotel.findById(id);
@@ -54,11 +54,32 @@ export const getHotel = async (req, res,next) => {
 };
 
 //Get All
-export const getAllHotel = async (req, res,next) => {
+export const getAllHotel = async (req, res, next) => {
   try {
     const hotel = await Hotel.find();
     res.status(200).json(hotel);
   } catch (error) {
     next(error);
-  } 
+  }
+};
+
+//CountByCity
+export const countByCity = async (req, res, next) => {
+  const cities = req.query.cities.split(",");
+  try {
+    const list = await Promise.all(
+      cities.map((city) => {
+        return Hotel.countDocuments({ city: city });
+      })
+    );
+    res.status(200).json(list);
+  } catch (error) {
+    next(error);
+  }
+};
+
+//CountByType
+export const countByType = async (req, res, next) => {
+  const hotelCount = await Hotel.countDocuments({ type: "hotel" });
+  const apartmentCount = await Hotel.countDocuments({ type: "apartment" });
 };

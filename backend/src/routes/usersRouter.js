@@ -10,11 +10,11 @@ import { verifyAdmin, verifyUser } from "../utils/verifyToken.js";
 const usersRouter = express.Router();
 
 //UPDATE
-usersRouter.put("/:id", verifyUser, updateUser);
+usersRouter.put("/:id([0-9a-f]{24})", verifyUser, updateUser);
 //DELETE
-usersRouter.delete("/:id", verifyUser, deleteUser);
+usersRouter.delete("/:id([0-9a-f]{24})", verifyUser, deleteUser);
 //GET
-usersRouter.get("/:id", verifyUser, getUser);
+usersRouter.get("/:id([0-9a-f]{24})", verifyUser, getUser);
 //GET ALL
 usersRouter.get("/", verifyAdmin, getUsers);
 
